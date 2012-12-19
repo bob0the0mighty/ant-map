@@ -9,21 +9,9 @@ public class AntRoad extends PApplet {
 
 	private PImage				i_img, r_img;
 	private final String	img_loc		= "../Eupa-third-managed.png";
-	private final int			num_ants	= 1;
+	private final int			num_ants	= 3;
 	private final Ant[]		ants			= new Ant[num_ants];
 	private final Random	rng				= new Random(846548);
-
-	private enum Colors { // very simplistic biome selection
-		FF5A8552, // Decid forests
-		FFFF33E9, // cities
-		FF8BAA5E, // Conif forests
-		FF8EA678, // moist grasslands
-		FFC4CE9C, // arid grasslands
-		FF657453, // moist hills
-		FF56594c, // arid hills
-		FF2F628F, // water
-		FF86A3AB// ditto
-	};
 
 	@Override
 	public void setup() {
@@ -33,6 +21,8 @@ public class AntRoad extends PApplet {
 		r_img = createImage(1920, 1200, ARGB);
 		r_img.loadPixels();
 		ants[0] = new Ant(949, 889, i_img, r_img, rng);
+		ants[1] = new Ant(949, 889, i_img, r_img, rng);
+		ants[2] = new Ant(949, 889, i_img, r_img, rng);
 	}
 
 	@Override
@@ -42,12 +32,21 @@ public class AntRoad extends PApplet {
 		for (int x = 0; x < ants.length; x++) {
 			// println("Home ");
 			// println(home);
-			int[] trail = ants[x].move();
-			r_img.pixels[trail[1] * width + trail[0]] = 0x7F000000;
-			println(hex(i_img.pixels[trail[1] * width + trail[0]]));
+			int next_move = ants[x].move();
+			r_img.pixels[next_move] = 0x7FFF0000;
+			println(next_move);
 			// println("Loc");
 			// println(ants[x].get_Pos());
 		}
+		// for (int x = 0; x < r_img.pixels.length; x++) {
+		// int a = (r_img.pixels[x] >> 24) & 0xFF;
+		// int r = (r_img.pixels[x] >> 16) & 0xFF;
+		// int g = (r_img.pixels[x] >> 8) & 0xFF;
+		// int b = r_img.pixels[x] & 0xFF;
+		// a -= 5;
+		//
+		// r_img.pixels[x] = a | r | g | b;
+		// }
 		r_img.updatePixels();
 	}
 
