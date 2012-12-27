@@ -9,21 +9,26 @@ import processing.core.PImage;
 
 public class AntRoad extends PApplet {
 
-	private PImage				i_img, r_img;
+	private PImage			i_img, r_img;
+	private float[][]		to_trail, from_trail;
 	private final String	img_loc	= "../Eupa-third-managed.png";
-	private int						num_ants;
-	private List<Ant>			ants;
-	private final int			seed		= 8465548;
+	private int				num_ants;
+	private List<Ant>		ants;
+	private final int		seed		= 8465548;
 	private final Point		home		= new Point(949, 889);
-	private int						turns;
+	private int				turns;
 
 	@Override
 	public void setup() {
 		size(1920, 1200);
 		i_img = loadImage(img_loc);
 		i_img.loadPixels();
+		
 		r_img = createImage(1920, 1200, ARGB);
 		r_img.loadPixels();
+		
+		to_trail = from_trail = new float[i_img.width][i_img.height];
+		
 		i_img.pixels[home.y * i_img.width + home.x] = 0xFFFFFFFF;
 
 		turns = 1;
@@ -36,7 +41,7 @@ public class AntRoad extends PApplet {
 		ants = new ArrayList<Ant>(num_ants);
 
 		for (int x = 0; x < num_ants; x++) {
-			ants.add(new Ant(home.x, home.y, this, i_img, r_img, seed + x));
+			ants.add(new Ant(home.x, home.y, this, i_img, to_trail, from_trail, seed + x));
 		}
 		println(num_ants);
 	}
@@ -55,13 +60,13 @@ public class AntRoad extends PApplet {
 			ellipse(a.cur_x, a.cur_y, 5, 5);
 		}
 
-		if (turns % 11 == 0) {
+		if (turns % 5 == 0) {
 			for (int x = 0; x < r_img.pixels.length; x++) {
 				int a = (r_img.pixels[x] >> 24) & 0xFF;
 				int r = (r_img.pixels[x] >> 16) & 0xFF;
 				int g = (r_img.pixels[x] >> 8) & 0xFF;
 				int b = r_img.pixels[x] & 0xFF;
-				if (r > 0) {
+				if (a > 2) {
 					r_img.pixels[x] = color(r, g, b, a - 1);
 				}
 			}
